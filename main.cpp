@@ -3,44 +3,48 @@
 #include "json.hpp"
 
 using namespace std;
-using json=nlohmann::json;
 
 
 struct Movie {
     string title, category, releaseDate;
     double budget;
     vector<string> cast;
+    
+    struct cmp {
+        bool operator()(const Movie &a, const Movie &b) { return a.title < b.title; }
+    };
 };
 
 
 struct User {
     string email;
-    vector<Movie> favorites;
+    set<Movie, Movie::cmp> favorites;
+    
+    struct cmp {
+        bool operator()(const User &a, const User &b) { return a.email < b.email; }
+    };
 };
 
 
 class MovieLists
 {
 public:
-    vector<Movie> AllMovies;
+    set<Movie, Movie::cmp> AllMovies;
     
     MovieLists()
     {
-        // Open the JSON file
         ifstream file("movies.json");
         if (!file.is_open()) cerr<<"Error opening file!\n";
 
-        // Parse the JSON
-        json jsonData;
+        nlohmann::json jsonData;
         try {
-            jsonData=json::parse(file);
+            jsonData=nlohmann::json::parse(file);
             // cout<<setw(4)<<jsonData<<'\n';
         }
-        catch (json::parse_error& e) {
+        catch (nlohmann::json::parse_error& e) {
             cerr<<"Parse error: "<<e.what()<<'\n';
         }
 
-        // Fill up the vector<Movie>
         for (auto& movieData : jsonData)
         {
             Movie movie;
@@ -49,36 +53,82 @@ public:
             movie.category=movieData["category"];
             movie.releaseDate=movieData["release_date"];
             movie.budget=movieData["budget"];
-            AllMovies.push_back(movie);
+            AllMovies.insert(movie);
         }
     }
 
-    void ShowAllMovies()
+    static void ShowAllMovies(const set<Movie, Movie::cmp>& st, string addi="  ")
     {
-        // auto cmp=[](Movie &a, Movie &b) {
-        //     return a.title < b.title;
-        // };
-        // sort(AllMovies.begin(), AllMovies.end(), cmp);
+        // sort(AllMovies.begin(), AllMovies.end(), Movie::cmp());
+        for(const Movie& m : st)
+        {
+            cout<<addi.substr(0,addi.size()-2)<<"{\n";
+            cout<<addi<<"  Title: "<<m.title<<",\n";
+            cout<<addi<<"  Category: "<<m.category<<",\n";
+            cout<<addi<<"  ReleaseDate: "<<m.releaseDate<<",\n";
+            cout<<addi<<"  Budget: "<<m.budget<<",\n";
+            cout<<addi<<"  Cast: "<<m.cast<<"\n";
+            cout<<addi.substr(0,addi.size()-2)<<"}\n\n";
+        }
+    }
+};
 
-        for(Movie& m : AllMovies)
+
+class UserList
+{
+public:
+    set<User, User::cmp> AllUsers;
+    
+    UserList()
+    {
+        ifstream file("users.json");
+        if (!file.is_open()) cerr<<"Error opening file!\n";
+
+        nlohmann::json jsonData;
+        try {
+            jsonData=nlohmann::json::parse(file);
+        }
+        catch (nlohmann::json::parse_error& e) {
+            cerr<<"Parse error: "<<e.what()<<'\n';
+        }
+
+        for (auto& userData : jsonData)
+        {
+            User user;
+            user.email=userData["email"];
+            for (auto& f : userData["favorites"])
+            {
+                Movie movie;
+                movie.title = f["title"];
+                movie.cast = f["cast"];
+                movie.category = f["category"];
+                movie.releaseDate = f["release_date"];
+                movie.budget = f["budget"];
+                user.favorites.insert(movie);
+            }
+            AllUsers.insert(user);
+        }
+    }
+
+    void ShowAllUsers()
+    {
+        for(const User& u : AllUsers)
         {
             cout<<"{\n";
-            cout<<"  Title: "<<m.title<<",\n";
-            cout<<"  Category: "<<m.category<<",\n";
-            cout<<"  ReleaseDate: "<<m.releaseDate<<",\n";
-            cout<<"  Budget: "<<m.budget<<",\n";
-            cout<<"  Cast: "<<m.cast<<"\n";
+            cout<<"  email: "<<u.email<<",\n";
+            cout<<"  Favorites: "<<"\n";
+            MovieLists::ShowAllMovies(u.favorites, "    ");
             cout<<"}\n\n";
         }
     }
 };
 
 
-
-
-
 int main()
 {
     MovieLists ml;
-    ml.ShowAllMovies();
+    // ml.ShowAllMovies(ml.AllMovies);
+
+    UserList ul;
+    ul.ShowAllUsers();
 }
