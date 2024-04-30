@@ -7,9 +7,9 @@ using namespace std;
 
 struct Movie {
     int id;
-    string title, category, releaseDate;
+    string title, releaseDate;
     double budget;
-    vector<string> cast;
+    vector<string> cast, category;
     
     struct cmp {
         bool operator()(const Movie &a, const Movie &b) { return a.title < b.title; }
@@ -81,6 +81,38 @@ public:
             return;
         }
         for(int& i : movieIds) ml.AllMovies[i].PrintMovie(addi);
+    }
+
+    vector<Movie> searchMovies(string& titleQuery, string& castQuery, string& categoryQuery)
+    {
+        vector<Movie> result;
+        for (auto& p : AllMovies)
+        {
+            Movie m=p.second;
+            for(char& c : m.title) c=tolower(c);
+            for(auto& s : m.category) for(char& c : s) c=tolower(c);
+            for(auto& s : m.cast) for(char& c : s) c=tolower(c);
+            bool matchesTitle=(m.title.find(titleQuery) != string::npos);
+            bool matchesCast=false;
+            for (string& castMember : m.cast) {
+                if (castMember.find(castQuery) != string::npos) {
+                    matchesCast=true;
+                    break;
+                }
+            }
+            bool matchesCategory=false;
+            for (string& catg : m.category) {
+                if (catg.find(categoryQuery) != string::npos) {
+                    matchesCategory=true;
+                    break;
+                }
+            }
+            // bool matchesCategory=(m.category.find(categoryQuery) != string::npos);
+            dbg(matchesTitle,matchesCast,matchesCategory);
+            if(matchesTitle && (matchesCast || matchesCategory)) result.push_back(p.second);
+        }
+        sort(result.begin(), result.end(), Movie::cmp());
+        return result;
     }
 };
 
@@ -166,13 +198,36 @@ public:
 
 int main()
 {
-    // MovieLists ml;
-    // ml.ShowAllMovies();
-
-    // UserList ul;
-    // ul.ShowAllUsers();
+    MovieLists ml;
+    ml.ShowAllMovies();
 
     UserList ul;
     ul.addFavoriteMovie("user3@example.com", 15);
     ul.ShowAllUsers();
+
+    system("pause");
+
+    while(1)
+    {
+        system("cls");
+        cout<<"Choose an option: \n";
+        cout<<"0.Quit\n1. Search\n";
+        int input; cin>>input;
+        cin.ignore();
+        if(input)
+        {
+            string title, cast, category;
+            cout<<"1. Enter movie title: ", getline(cin, title);
+            cout<<"2. Enter movie cast: ", getline(cin, cast);
+            cout<<"3. Enter movie category: ", getline(cin, category);
+            dbg(title,cast,category);
+
+            vector<Movie> v=ml.searchMovies(title, cast, category);
+            for(Movie& m : v) m.PrintMovie();
+
+            system("pause");
+        }
+        else break;
+    }
+    
 }
