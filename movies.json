@@ -1,170 +1,326 @@
 [
     {
+        "budget": 160000000.0,
+        "cast": [
+            "Leonardo DiCaprio",
+            "Joseph Gordon-Levitt",
+            "Ellen Page"
+        ],
+        "category": [
+            "Science Fiction",
+            "Action"
+        ],
         "id": 0,
-        "title": "Inception",
-        "cast": ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Ellen Page"],
-        "category": ["Science Fiction", "Action"],
         "release_date": "2010-07-16",
-        "budget": 160000000
+        "title": "Inception"
     },
     {
+        "budget": 185000000.0,
+        "cast": [
+            "Christian Bale",
+            "Heath Ledger",
+            "Aaron Eckhart"
+        ],
+        "category": [
+            "Action",
+            "Crime",
+            "Drama"
+        ],
         "id": 1,
-        "title": "The Dark Knight",
-        "cast": ["Christian Bale", "Heath Ledger", "Aaron Eckhart"],
-        "category": ["Action", "Crime", "Drama"],
         "release_date": "2008-07-18",
-        "budget": 185000000
+        "title": "The Dark Knight"
     },
     {
+        "budget": 25000000.0,
+        "cast": [
+            "Tim Robbins",
+            "Morgan Freeman"
+        ],
+        "category": [
+            "Drama"
+        ],
         "id": 2,
-        "title": "The Shawshank Redemption",
-        "cast": ["Tim Robbins", "Morgan Freeman"],
-        "category": ["Drama"],
         "release_date": "1994-10-14",
-        "budget": 25000000
+        "title": "The Shawshank Redemption"
     },
     {
+        "budget": 8000000.0,
+        "cast": [
+            "John Travolta",
+            "Uma Thurman",
+            "Samuel L. Jackson"
+        ],
+        "category": [
+            "Crime",
+            "Drama"
+        ],
         "id": 3,
-        "title": "Pulp Fiction",
-        "cast": ["John Travolta", "Uma Thurman", "Samuel L. Jackson"],
-        "category": ["Crime", "Drama"],
         "release_date": "1994-10-14",
-        "budget": 8000000
+        "title": "Pulp Fiction"
     },
     {
+        "budget": 6000000.0,
+        "cast": [
+            "Marlon Brando",
+            "Al Pacino",
+            "James Caan"
+        ],
+        "category": [
+            "Crime",
+            "Drama"
+        ],
         "id": 4,
-        "title": "The Godfather",
-        "cast": ["Marlon Brando", "Al Pacino", "James Caan"],
-        "category": ["Crime", "Drama"],
         "release_date": "1972-03-24",
-        "budget": 6000000
+        "title": "The Godfather"
     },
     {
+        "budget": 55000000.0,
+        "cast": [
+            "Tom Hanks",
+            "Robin Wright",
+            "Gary Sinise"
+        ],
+        "category": [
+            "Drama",
+            "Romance"
+        ],
         "id": 5,
-        "title": "Forrest Gump",
-        "cast": ["Tom Hanks", "Robin Wright", "Gary Sinise"],
-        "category": ["Drama", "Romance"],
         "release_date": "1994-07-06",
-        "budget": 55000000
+        "title": "Forrest Gump"
     },
     {
+        "budget": 63000000.0,
+        "cast": [
+            "Keanu Reeves",
+            "Laurence Fishburne",
+            "Carrie-Anne Moss"
+        ],
+        "category": [
+            "Action",
+            "Sci-Fi"
+        ],
         "id": 6,
-        "title": "The Matrix",
-        "cast": ["Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss"],
-        "category": ["Action", "Sci-Fi"],
         "release_date": "1999-03-31",
-        "budget": 63000000
+        "title": "The Matrix"
     },
     {
+        "budget": 63000000.0,
+        "cast": [
+            "Brad Pitt",
+            "Edward Norton",
+            "Helena Bonham Carter"
+        ],
+        "category": [
+            "Drama"
+        ],
         "id": 7,
-        "title": "Fight Club",
-        "cast": ["Brad Pitt", "Edward Norton", "Helena Bonham Carter"],
-        "category": ["Drama"],
         "release_date": "1999-10-15",
-        "budget": 63000000
+        "title": "Fight Club"
     },
     {
+        "budget": 25000000.0,
+        "cast": [
+            "Robert De Niro",
+            "Ray Liotta",
+            "Joe Pesci"
+        ],
+        "category": [
+            "Biography",
+            "Crime",
+            "Drama"
+        ],
         "id": 8,
-        "title": "Goodfellas",
-        "cast": ["Robert De Niro", "Ray Liotta", "Joe Pesci"],
-        "category": ["Biography", "Crime", "Drama"],
         "release_date": "1990-09-21",
-        "budget": 25000000
+        "title": "Goodfellas"
     },
     {
+        "budget": 19000000.0,
+        "cast": [
+            "Jodie Foster",
+            "Anthony Hopkins",
+            "Lawrence A. Bonney"
+        ],
+        "category": [
+            "Crime",
+            "Drama",
+            "Thriller"
+        ],
         "id": 9,
-        "title": "The Silence of the Lambs",
-        "cast": ["Jodie Foster", "Anthony Hopkins", "Lawrence A. Bonney"],
-        "category": ["Crime", "Drama", "Thriller"],
         "release_date": "1991-02-14",
-        "budget": 19000000
+        "title": "The Silence of the Lambs"
     },
     {
+        "budget": 94000000.0,
+        "cast": [
+            "Elijah Wood",
+            "Viggo Mortensen",
+            "Ian McKellen"
+        ],
+        "category": [
+            "Adventure",
+            "Drama",
+            "Fantasy"
+        ],
         "id": 10,
-        "title": "The Lord of the Rings: The Return of the King",
-        "cast": ["Elijah Wood", "Viggo Mortensen", "Ian McKellen"],
-        "category": ["Adventure", "Drama", "Fantasy"],
         "release_date": "2003-12-17",
-        "budget": 94000000
+        "title": "The Lord of the Rings: The Return of the King"
     },
     {
+        "budget": 22000000.0,
+        "cast": [
+            "Liam Neeson",
+            "Ben Kingsley",
+            "Ralph Fiennes"
+        ],
+        "category": [
+            "Biography",
+            "Drama",
+            "History"
+        ],
         "id": 11,
-        "title": "Schindler's List",
-        "cast": ["Liam Neeson", "Ben Kingsley", "Ralph Fiennes"],
-        "category": ["Biography", "Drama", "History"],
         "release_date": "1994-02-04",
-        "budget": 22000000
+        "title": "Schindler's List"
     },
     {
+        "budget": 75000000.0,
+        "cast": [
+            "Brad Pitt",
+            "Diane Kruger",
+            "Eli Roth"
+        ],
+        "category": [
+            "Adventure",
+            "Drama",
+            "War"
+        ],
         "id": 12,
-        "title": "Inglourious Basterds",
-        "cast": ["Brad Pitt", "Diane Kruger", "Eli Roth"],
-        "category": ["Adventure", "Drama", "War"],
         "release_date": "2009-08-21",
-        "budget": 75000000
+        "title": "Inglourious Basterds"
     },
     {
+        "budget": 90000000.0,
+        "cast": [
+            "Leonardo DiCaprio",
+            "Matt Damon",
+            "Jack Nicholson"
+        ],
+        "category": [
+            "Crime",
+            "Drama",
+            "Thriller"
+        ],
         "id": 13,
-        "title": "The Departed",
-        "cast": ["Leonardo DiCaprio", "Matt Damon", "Jack Nicholson"],
-        "category": ["Crime", "Drama", "Thriller"],
         "release_date": "2006-10-06",
-        "budget": 90000000
+        "title": "The Departed"
     },
     {
+        "budget": 70000000.0,
+        "cast": [
+            "Tom Hanks",
+            "Matt Damon",
+            "Tom Sizemore"
+        ],
+        "category": [
+            "Drama",
+            "War"
+        ],
         "id": 14,
-        "title": "Saving Private Ryan",
-        "cast": ["Tom Hanks", "Matt Damon", "Tom Sizemore"],
-        "category": ["Drama", "War"],
         "release_date": "1998-07-24",
-        "budget": 70000000
+        "title": "Saving Private Ryan"
     },
     {
+        "budget": 60000000.0,
+        "cast": [
+            "Tom Hanks",
+            "Michael Clarke Duncan",
+            "David Morse"
+        ],
+        "category": [
+            "Crime",
+            "Drama",
+            "Fantasy"
+        ],
         "id": 15,
-        "title": "The Green Mile",
-        "cast": ["Tom Hanks", "Michael Clarke Duncan", "David Morse"],
-        "category": ["Crime", "Drama", "Fantasy"],
         "release_date": "1999-12-10",
-        "budget": 60000000
+        "title": "The Green Mile"
     },
     {
+        "budget": 40000000.0,
+        "cast": [
+            "Christian Bale",
+            "Hugh Jackman",
+            "Scarlett Johansson"
+        ],
+        "category": [
+            "Drama",
+            "Mystery",
+            "Sci-Fi"
+        ],
         "id": 16,
-        "title": "The Prestige",
-        "cast": ["Christian Bale", "Hugh Jackman", "Scarlett Johansson"],
-        "category": ["Drama", "Mystery", "Sci-Fi"],
         "release_date": "2006-10-20",
-        "budget": 40000000
+        "title": "The Prestige"
     },
     {
+        "budget": 103000000.0,
+        "cast": [
+            "Russell Crowe",
+            "Joaquin Phoenix",
+            "Connie Nielsen"
+        ],
+        "category": [
+            "Action",
+            "Adventure",
+            "Drama"
+        ],
         "id": 17,
-        "title": "Gladiator",
-        "cast": ["Russell Crowe", "Joaquin Phoenix", "Connie Nielsen"],
-        "category": ["Action", "Adventure", "Drama"],
         "release_date": "2000-05-05",
-        "budget": 103000000
+        "title": "Gladiator"
     },
     {
+        "budget": 40000000.0,
+        "cast": [
+            "Bruce Willis",
+            "Haley Joel Osment",
+            "Toni Collette"
+        ],
+        "category": [
+            "Drama",
+            "Mystery",
+            "Thriller"
+        ],
         "id": 18,
-        "title": "The Sixth Sense",
-        "cast": ["Bruce Willis", "Haley Joel Osment", "Toni Collette"],
-        "category": ["Drama", "Mystery", "Thriller"],
         "release_date": "1999-08-06",
-        "budget": 40000000
+        "title": "The Sixth Sense"
     },
     {
+        "budget": 6000000.0,
+        "cast": [
+            "Kevin Spacey",
+            "Gabriel Byrne",
+            "Chazz Palminteri"
+        ],
+        "category": [
+            "Crime",
+            "Mystery",
+            "Thriller"
+        ],
         "id": 19,
-        "title": "The Usual Suspects",
-        "cast": ["Kevin Spacey", "Gabriel Byrne", "Chazz Palminteri"],
-        "category": ["Crime", "Mystery", "Thriller"],
         "release_date": "1995-09-15",
-        "budget": 6000000
+        "title": "The Usual Suspects"
     },
     {
+        "budget": 9000000.0,
+        "cast": [
+            "Guy Pearce",
+            "Carrie-Anne Moss",
+            "Joe Pantoliano"
+        ],
+        "category": [
+            "Mystery",
+            "Thriller"
+        ],
         "id": 20,
-        "title": "Memento",
-        "cast": ["Guy Pearce", "Carrie-Anne Moss", "Joe Pantoliano"],
-        "category": ["Mystery", "Thriller"],
         "release_date": "2001-05-25",
-        "budget": 9000000
+        "title": "Memento"
     }
 ]

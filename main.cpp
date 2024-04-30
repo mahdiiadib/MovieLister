@@ -42,12 +42,22 @@ struct User {
 class MovieLists
 {
 public:
+    string moviesJsonFileName="movies.json";
     map<int,Movie> AllMovies;
     
     MovieLists()
     {
-        ifstream file("movies.json");
-        if (!file.is_open()) cerr<<"Error opening file!\n";
+        readMoviesFromJsonFile();
+    }
+
+    void readMoviesFromJsonFile()
+    {
+        ifstream file(moviesJsonFileName);
+        if (!file.is_open())
+        {
+            cerr<<"Error opening file!\n";
+            return;
+        }
 
         nlohmann::json jsonData;
         try {
@@ -57,6 +67,7 @@ public:
         catch (nlohmann::json::parse_error& e) {
             cerr<<"Parse error: "<<e.what()<<'\n';
         }
+        file.close();
 
         for (auto& movieData : jsonData)
         {
@@ -71,15 +82,42 @@ public:
         }
     }
 
-    static void ShowAllMovies(vector<int> movieIds=vector<int>{-1}, string addi="  ")
+    void writeMoviesToJsonFile()
     {
-        MovieLists ml;
-        if(!movieIds.empty() && movieIds[0]==-1)
+        ofstream file(moviesJsonFileName);
+        if(!file.is_open())
         {
-            for(auto& p : ml.AllMovies) p.second.PrintMovie(addi);
+            cerr<<"Error opening file for writing: "<<moviesJsonFileName<<'\n';
             return;
         }
-        for(int& i : movieIds) ml.AllMovies[i].PrintMovie(addi);
+
+        nlohmann::json jsonData;
+        for(auto& p : AllMovies)
+        {
+            Movie& movie=p.second;
+            jsonData.push_back({
+                {"id", movie.id},
+                {"title", movie.title},
+                {"cast", movie.cast},
+                {"category", movie.category},
+                {"release_date", movie.releaseDate},
+                {"budget", movie.budget}
+            });
+        }
+
+        // file<<setw(4)<<jsonData<<"\n";
+        file<<jsonData.dump(4)<<"\n";
+        file.close();
+    }
+
+    void DisplayMovies(vector<int> movieIds=vector<int>{-1}, string addi="  ")
+    {
+        if(!movieIds.empty() && movieIds[0]==-1)
+        {
+            for(auto& p : AllMovies) p.second.PrintMovie(addi);
+            return;
+        }
+        for(int& i : movieIds) AllMovies[i].PrintMovie(addi);
     }
 
     vector<string> tokenize(string& s)
@@ -107,10 +145,14 @@ public:
         for(char& c : s) c=tolower(c);
     }
 
-    vector<Movie> searchMovies(string& titleQuery, string& castQuery, string& categoryQuery)
+    vector<Movie> searchMovies(string& titleQuery, string& castQuery, string& categoryQuery, vector<int> movieIndices=vector<int>{})
     {
+        map<int, Movie> movieMap;
+        if(movieIndices.empty()) movieMap=AllMovies;
+        else for(int& i : movieIndices) movieMap[i]=AllMovies[i];
+
         vector<Movie> result;
-        for (auto& p : AllMovies)
+        for (auto& p : movieMap)
         {
             Movie m=p.second;
 
@@ -136,7 +178,6 @@ public:
                 }
                 if(matchesTitle) break;
             }
-            if(titleQuery.empty()) matchesTitle=true;
 
             bool matchesCast=false;
             for(string& castToken : castTokens)
@@ -155,7 +196,6 @@ public:
                 }
                 if(matchesCast) break;
             }
-            if(castQuery.empty()) matchesCast=true;
 
             bool matchesCategory=false;
             for(string& categoryToken : categoryTokens)
@@ -173,11 +213,14 @@ public:
                 }
                 if(matchesCategory) break;
             }
-            if(categoryQuery.empty()) matchesCategory=true;
 
             dbg(matchesTitle, matchesCast, matchesCategory);
 
-            if(matchesTitle && matchesCast && matchesCategory) result.push_back(p.second);
+            if(titleQuery.empty() && castQuery.empty() && categoryQuery.empty()) result.push_back(p.second);
+            else if(titleQuery.empty() && castQuery.empty() && matchesCategory) result.push_back(p.second);
+            else if(titleQuery.empty() && matchesCast && categoryQuery.empty()) result.push_back(p.second);
+            else if(matchesTitle && castQuery.empty() && categoryQuery.empty()) result.push_back(p.second);
+            else if(matchesTitle || (matchesCast && matchesCategory)) result.push_back(p.second);
         }
         sort(result.begin(), result.end(), Movie::cmp());
         return result;
@@ -188,9 +231,15 @@ public:
 class UserList
 {
 public:
+    string usersJsonFileName="users.json";
     map<string, vector<int>> AllUsers;
     
     UserList()
+    {
+        readUsersFromJsonFile();
+    }
+
+    void readUsersFromJsonFile()
     {
         ifstream file("users.json");
         if (!file.is_open()) cerr<<"Error opening file!\n";
@@ -202,6 +251,7 @@ public:
         catch (nlohmann::json::parse_error& e) {
             cerr<<"Parse error: "<<e.what()<<'\n';
         }
+        file.close();
 
         for (auto& userData : jsonData)
         {
@@ -212,34 +262,104 @@ public:
         }
     }
 
-    void ShowAllUsers()
+    void writeUsersToJsonFile()
     {
-        for(auto& p : AllUsers)
+        ofstream file(usersJsonFileName);
+        if(!file.is_open())
         {
-            cout<<"{\n";
-            cout<<"  email: "<<p.first<<",\n";
-            cout<<"  Favorites: "<<"\n";
-            MovieLists::ShowAllMovies(p.second, "    ");
-            cout<<"}\n\n";
+            cerr<<"Error opening file for writing: "<<usersJsonFileName<<"\n";
+            return;
         }
+
+        nlohmann::json jsonData;
+        for (auto& p : AllUsers)
+        {
+            string email=p.first;
+            vector<int>& favorites=p.second;
+            jsonData.push_back({
+                {"email", email},
+                {"favorites", favorites}
+            });
+        }
+
+        file<<jsonData.dump(4)<<"\n";
+        file.close();
+    }
+
+    void ShowUserDetails(MovieLists& ml, string email="")
+    {
+        if(email=="")
+        {
+            for(auto& p : AllUsers)
+            {
+                cout<<"{\n";
+                cout<<"  email: "<<p.first<<",\n";
+                cout<<"  Favorites: "<<"\n";
+                ml.DisplayMovies(p.second, "    ");
+                cout<<"}\n\n";
+            }
+        }
+        else
+        {
+            if(userExists(email))
+            {
+                cout<<"{\n";
+                cout<<"  email: "<<email<<",\n";
+                cout<<"  Favorites: "<<"\n";
+                ml.DisplayMovies(AllUsers[email], "    ");
+                cout<<"}\n\n";
+            }
+            else cout<<"User "<<email<<" does not already exist\n";
+        }
+    }
+
+    bool userExists(string email)
+    {
+        return AllUsers.find(email)!=AllUsers.end();
+    }
+
+    bool isValidEmail(string& email)
+    {
+        regex emailPattern(R"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})");
+        return regex_match(email, emailPattern);
     }
 
     void addUser(string email)
     {
-        User newUser;
-        newUser.email = email;
-        AllUsers[email]=vector<int>{};
+        if(!isValidEmail(email)) cout<<email<<" is an invalid email address.\n";
+        else if(userExists(email)) cout<<"User "<<email<<" already exists\n";
+        else
+        {
+            User newUser;
+            newUser.email=email;
+            AllUsers[email]=vector<int>{};
+            cout<<"New user "<<email<<" has been added to user list\n";
+        }
     }
 
     void addFavoriteMovie(string email, int movieId)
     {
-        if(AllUsers.find(email)!=AllUsers.end())
+        MovieLists ml;
+        if(ml.AllMovies.find(movieId) == ml.AllMovies.end())
         {
-            AllUsers[email].push_back(movieId);
-            cout<<"Movie ID: "<<movieId<<" added to favorites\n";
+            cout<<"Movie ID: "<<movieId<<" is not present in the movie list\n";
             return;
         }
-        cout<<"User not found: "<<email<<'\n';
+
+        if(AllUsers.find(email)!=AllUsers.end())
+        {
+            for(int& i : AllUsers[email])
+            {
+                if(i==movieId)
+                {
+                    cout<<"Movie ID: "<<movieId<<" is already present in the favorites of "<<email<<"\n";
+                    return;
+                }
+            }
+            AllUsers[email].push_back(movieId);
+            cout<<"Movie ID: "<<movieId<<" has been added to favorites of "<<email<<"\n";
+        }
+        else cout<<"User not found: "<<email<<'\n';
     }
 
     void removeFavoriteMovie(string email, int movieId)
@@ -251,11 +371,11 @@ public:
                 if(*it==movieId)
                 {
                     AllUsers[email].erase(it);
-                    cout<<"Movie ID: "<<movieId<<" removed from favorites\n";
+                    cout<<"Movie ID: "<<movieId<<" has been removed from favorites of "<<email<<"\n";
                     return;
                 }
             }
-            cout<<"Movie ID: "<<movieId<<" not found in favorites\n";
+            cout<<"Movie ID: "<<movieId<<" is not found in favorites of "<<email<<"\n";
             return;
         }
         cout<<"User not found: "<<email<<'\n';
@@ -263,38 +383,118 @@ public:
 };
 
 
-int main()
+class Session
 {
     MovieLists ml;
-    ml.ShowAllMovies();
-
     UserList ul;
-    ul.addFavoriteMovie("user3@example.com", 15);
-    ul.ShowAllUsers();
+    string currentUserEmail;
 
-    system("pause");
-
-    while(1)
+    bool Login(string& email)
     {
-        system("cls");
-        cout<<"Choose an option: \n";
-        cout<<"0.Quit\n1. Search\n";
-        int input; cin>>input;
-        cin.ignore();
-        if(input)
-        {
-            string title, cast, category;
-            cout<<"1. Enter movie title: ", getline(cin, title);
-            cout<<"2. Enter movie cast: ", getline(cin, cast);
-            cout<<"3. Enter movie category: ", getline(cin, category);
-            dbg(title,cast,category);
+        if (ul.userExists(email)) return currentUserEmail=email, cout<<"Logged in as "<<email<<"\n", true;
+        else return cout<<"User not found: "<<email<<"\n", false;
+    }
 
-            vector<Movie> v=ml.searchMovies(title, cast, category);
-            for(Movie& m : v) m.PrintMovie();
+    void Logout()
+    {
+        cout<<"Logged out from "<<currentUserEmail<<"\n";
+        currentUserEmail="";
+    }
+
+    void SearchMovies(vector<int> movieIndices=vector<int>{})
+    {
+        string title, cast, category;
+        cout<<"1. Enter Movie Title (Press ENTER without typing any characters to give blank input): ", getline(cin, title);
+        cout<<"2. Enter Movie Cast (Press ENTER without typing any characters to give blank input): ", getline(cin, cast);
+        cout<<"3. Enter Movie Category (Press ENTER without typing any characters to give blank input): ", getline(cin, category);
+        dbg(title,cast,category);
+
+        vector<Movie> v=ml.searchMovies(title, cast, category, movieIndices);
+        for(Movie& m : v) m.PrintMovie();
+    }
+
+public:
+    Session()
+    {
+        currentUserEmail="";
+    }
+
+    ~Session()
+    {
+        ml.writeMoviesToJsonFile();
+        ul.writeUsersToJsonFile();
+    }
+
+    void StartSession()
+    {
+        while(true)
+        {
+            system("cls");
+            cout<<"0. Quit\n1. Search Movies\n2. Register\n3. Enter Profile\n";
+            cout<<"\nChoose an option: ";
+            string input; cin>>input, cin.ignore();
+
+            if(input=="0") break;
+            else if(input=="1") SearchMovies();
+            else if(input=="2")
+            {
+                string email;
+                cout<<"Enter email: \n", getline(cin, email);
+                ul.addUser(email);
+            }
+            else if(input=="3")
+            {
+                string email;
+                cout<<"Enter email: \n", getline(cin, email);
+
+                if(Login(email))
+                {
+                    system("pause");
+                    system("cls");
+                    while(true)
+                    {
+                        system("cls");
+                        cout<<"User: "<<currentUserEmail<<'\n';
+                        cout<<"\n0. Exit Profile\n1. Search Movies\n2. View Personal Details\n3. Search in Favorites\n4. Add to Favorites\n5. Remove from Favorites\n";
+                        cout<<"\nChoose an option: ";
+                        string option; cin>>option, cin.ignore();
+
+                        if(option=="0")
+                        {
+                            Logout();
+                            break;
+                        }
+                        else if(option=="1") SearchMovies();
+                        else if(option=="2") ul.ShowUserDetails(ml, currentUserEmail);
+                        else if(option=="3") SearchMovies(ul.AllUsers[currentUserEmail]);
+                        else if(option=="4")
+                        {
+                            int movieId;
+                            cout<<"Enter movie index to add: ", cin>>movieId, cin.ignore();
+                            ul.addFavoriteMovie(currentUserEmail, movieId);
+                        }
+                        else if(option=="5")
+                        {
+                            int movieId;
+                            cout<<"Enter movie index to remove: ", cin>>movieId, cin.ignore();
+                            ul.removeFavoriteMovie(currentUserEmail, movieId);
+                        }
+                        else cout<<"Invalid option! Try again.\n";
+
+                        system("pause");
+                    }
+                }
+            }
+            else cout<<"Invalid input! Try again.\n";
 
             system("pause");
         }
-        else break;
     }
-    
+};
+
+
+int main()
+{
+    Session session;
+    session.StartSession();
 }

@@ -1,0 +1,14 @@
+[
+    {
+      "email": "user1@example.com",
+      "favorites": [2,0]
+    },
+    {
+      "email": "user2@example.com",
+      "favorites": [1]
+    },
+    {
+      "email": "user3@example.com",
+      "favorites": []
+    }
+]
