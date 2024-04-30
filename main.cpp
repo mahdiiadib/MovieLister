@@ -42,7 +42,6 @@ struct User {
 class MovieLists
 {
 public:
-    // vector<Movie> AllMovies;
     map<int,Movie> AllMovies;
     
     MovieLists()
@@ -83,33 +82,102 @@ public:
         for(int& i : movieIds) ml.AllMovies[i].PrintMovie(addi);
     }
 
+    vector<string> tokenize(string& s)
+    {
+        vector<string> tokens;
+        stringstream ss(s);
+        string token;
+        while(ss>>token) tokens.push_back(token);
+        return tokens;
+    }
+
+    bool containsWord(string& str, string& word)
+    {
+        int pos=str.find(word);
+        while(pos!=string::npos)
+        {
+            if((pos==0 || !isalnum(str[pos-1])) && (pos+word.size()==str.size() || !isalnum(str[pos+word.length()]))) return true;
+            pos=str.find(word, pos+1);
+        }
+        return false;
+    }
+
+    void toLower(string& s)
+    {
+        for(char& c : s) c=tolower(c);
+    }
+
     vector<Movie> searchMovies(string& titleQuery, string& castQuery, string& categoryQuery)
     {
         vector<Movie> result;
         for (auto& p : AllMovies)
         {
             Movie m=p.second;
-            for(char& c : m.title) c=tolower(c);
-            for(auto& s : m.category) for(char& c : s) c=tolower(c);
-            for(auto& s : m.cast) for(char& c : s) c=tolower(c);
-            bool matchesTitle=(m.title.find(titleQuery) != string::npos);
+
+            toLower(titleQuery), toLower(castQuery), toLower(categoryQuery);
+            toLower(m.title);
+            for(auto& s : m.category) toLower(s);
+            for(auto& s : m.cast) toLower(s);
+
+            vector<string> titleTokens=tokenize(m.title);
+            vector<string> castTokens=tokenize(castQuery);
+            vector<string> categoryTokens=tokenize(categoryQuery);
+
+            bool matchesTitle=false;
+            for(string& titleToken : titleTokens)
+            {
+                for(string& queryToken : tokenize(titleQuery))
+                {
+                    if(containsWord(titleToken, queryToken))
+                    {
+                        matchesTitle=true;
+                        break;
+                    }
+                }
+                if(matchesTitle) break;
+            }
+            if(titleQuery.empty()) matchesTitle=true;
+
             bool matchesCast=false;
-            for (string& castMember : m.cast) {
-                if (castMember.find(castQuery) != string::npos) {
-                    matchesCast=true;
-                    break;
+            for(string& castToken : castTokens)
+            {
+                for(string& castMember : m.cast)
+                {
+                    for(string& queryToken : tokenize(castToken))
+                    {
+                        if(containsWord(castMember, queryToken))
+                        {
+                            matchesCast=true;
+                            break;
+                        }
+                    }
+                    if(matchesCast) break;
                 }
+                if(matchesCast) break;
             }
+            if(castQuery.empty()) matchesCast=true;
+
             bool matchesCategory=false;
-            for (string& catg : m.category) {
-                if (catg.find(categoryQuery) != string::npos) {
-                    matchesCategory=true;
-                    break;
+            for(string& categoryToken : categoryTokens)
+            {
+                for(string& catg : m.category) {
+                    for(string& queryToken : tokenize(categoryToken))
+                    {
+                        if(containsWord(catg, queryToken))
+                        {
+                            matchesCategory=true;
+                            break;
+                        }
+                    }
+                    if(matchesCategory) break;
                 }
+                if(matchesCategory) break;
             }
-            // bool matchesCategory=(m.category.find(categoryQuery) != string::npos);
-            dbg(matchesTitle,matchesCast,matchesCategory);
-            if(matchesTitle && (matchesCast || matchesCategory)) result.push_back(p.second);
+            if(categoryQuery.empty()) matchesCategory=true;
+
+            dbg(matchesTitle, matchesCast, matchesCategory);
+
+            if(matchesTitle && matchesCast && matchesCategory) result.push_back(p.second);
         }
         sort(result.begin(), result.end(), Movie::cmp());
         return result;
@@ -151,7 +219,6 @@ public:
             cout<<"{\n";
             cout<<"  email: "<<p.first<<",\n";
             cout<<"  Favorites: "<<"\n";
-            // cout<<p.second<<'\n';
             MovieLists::ShowAllMovies(p.second, "    ");
             cout<<"}\n\n";
         }
