@@ -35,7 +35,7 @@ namespace Helper
         #if defined(_WIN32) || defined(_WIN64)
             system("pause");
         #else
-            cout<<"Press any key to continue . . . ";
+            cout<<"Press ENTER key to continue . . . ";
             cin.get();
         #endif
     }
