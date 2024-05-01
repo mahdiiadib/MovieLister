@@ -105,7 +105,8 @@ public:
     User GetUser(string email)
     {
         // Check if user with given email exists and return that user object
-        if(AllUsers.find(email) != AllUsers.end()) return User{ email, AllUsers[email] };
+        if(userExists(email)) return User{ email, AllUsers[email] };
+        return User {"", vector<int>{}};
     }
 
     bool userExists(string email)
