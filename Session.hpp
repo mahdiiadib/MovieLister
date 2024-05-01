@@ -10,30 +10,32 @@ using namespace std;
 
 class Session
 {
-    MovieList ml;
-    UserList ul;
-    string currentUserEmail;
+    MovieList ml; // MovieList to manage movies
+    UserList ul; // UserList to manage users
+    string currentUserEmail; // current user's email
 
     bool Login(string& email)
     {
-        Helper::ToLower(email);
+        // Convert email to lowercase and if user exists, set current user
+        Helper::ToLower(email); 
         if (ul.userExists(email)) return currentUserEmail=email, cout<<"Logged in as "<<email<<"\n", true;
         else return cout<<"User not found: "<<email<<"\n", false;
     }
 
     void Logout()
     {
+        // Display logout message and reset current user
         cout<<"Logged out from "<<currentUserEmail<<"\n";
         currentUserEmail="";
     }
 
     void SearchMovies(vector<int> movieIndices=vector<int>{})
     {
+        // Search movies with provided parameters
         string title, cast, category;
         cout<<"1. Enter Movie Title (Press ENTER without typing any characters to give blank input): ", getline(cin, title);
         cout<<"2. Enter Movie Cast (Press ENTER without typing any characters to give blank input): ", getline(cin, cast);
         cout<<"3. Enter Movie Category (Press ENTER without typing any characters to give blank input): ", getline(cin, category);
-        // dbg(title,cast,category);
 
         vector<Movie> v=ml.searchMovies(title, cast, category, movieIndices);
         for(Movie& m : v) m.PrintMovie();
@@ -42,18 +44,18 @@ class Session
 public:
     Session()
     {
-        currentUserEmail="";
+        currentUserEmail=""; // Initialize current user email to empty string
     }
 
     ~Session()
     {
-        ml.writeMoviesToJsonFile();
-        ul.writeUsersToJsonFile();
+        ml.writeMoviesToJsonFile(); // Write movie data to JSON file
+        ul.writeUsersToJsonFile(); // Write user data to JSON file
     }
 
     void RunSession()
     {
-        while(true)
+        while(true) // Main menu loop of the session
         {
             Helper::ClearScreen();
             cout<<"0. Quit\n1. Search Movies\n2. Register\n3. Enter Profile\n";
@@ -77,7 +79,8 @@ public:
                 {
                     Helper::Pause();
                     Helper::ClearScreen();
-                    while(true)
+
+                    while(true) // User profile menu loop of the session
                     {
                         Helper::ClearScreen();
                         cout<<"User: "<<currentUserEmail<<'\n';

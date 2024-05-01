@@ -5,16 +5,18 @@ using namespace std;
 
 struct Movie
 {
-    int id;
-    string title, releaseDate;
-    double budget;
-    vector<string> cast, category;
+    int id; // Unique identifier for the movie
+    string title, releaseDate; // Title and release date of the movie
+    double budget; // Movie budget
+    vector<string> cast, category; // List of cast members and movie categories
     
+    // Comparator for sorting movies by title
     struct cmp
     {
         bool operator()(const Movie &a, const Movie &b) { return a.title < b.title; }
     };
 
+    // Printing movie details with indentation
     void PrintMovie(string addi="  ")
     {
         cout<<addi.substr(0,addi.size()-2)<<"{\n";

@@ -7,6 +7,7 @@ namespace Helper
 {
     vector<string> tokenize(string& s)
     {
+        // Tokenize the input string and return the tokens
         vector<string> tokens;
         stringstream ss(s);
         string token;
@@ -16,6 +17,8 @@ namespace Helper
 
     bool containsWord(string& str, string& word)
     {
+        // Tokenize the input string and check if it contains the word
+        // Return true if word is found, otherwise false
         stringstream ss(str);
         string token;
         while(ss>>token) if(token==word) return true;
@@ -24,10 +27,10 @@ namespace Helper
 
     void ToLower(string& s)
     {
-        for(char& c : s) c=tolower(c);
+        for(char& c : s) c=tolower(c); // Convert each character in the string to lowercase
     }
 
-    void Pause()
+    void Pause() // Pause execution
     {
         #if defined(_WIN32) || defined(_WIN64)
             system("pause");
@@ -37,7 +40,7 @@ namespace Helper
         #endif
     }
 
-    void ClearScreen()
+    void ClearScreen() // Clear the console screen
     {
         #if defined(_WIN32) || defined(_WIN64)
             system("cls");

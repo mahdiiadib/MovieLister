@@ -6,6 +6,6 @@ using namespace std;
 
 int main()
 {
-    Session session;
-    session.RunSession();
+    Session session; // Creating a Session object
+    session.RunSession(); // Running the session
 }
