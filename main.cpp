@@ -1,5 +1,4 @@
-#include "bits/stdc++.h"
-#include "bleh.h"
+#include "all_headers.h"
 #include "json.hpp"
 
 using namespace std;
@@ -140,7 +139,7 @@ public:
         return false;
     }
 
-    void toLower(string& s)
+    void ToLower(string& s)
     {
         for(char& c : s) c=tolower(c);
     }
@@ -156,10 +155,10 @@ public:
         {
             Movie m=p.second;
 
-            toLower(titleQuery), toLower(castQuery), toLower(categoryQuery);
-            toLower(m.title);
-            for(auto& s : m.category) toLower(s);
-            for(auto& s : m.cast) toLower(s);
+            ToLower(titleQuery), ToLower(castQuery), ToLower(categoryQuery);
+            ToLower(m.title);
+            for(auto& s : m.category) ToLower(s);
+            for(auto& s : m.cast) ToLower(s);
 
             vector<string> titleTokens=tokenize(m.title);
             vector<string> castTokens=tokenize(castQuery);
@@ -313,13 +312,20 @@ public:
         }
     }
 
+    void ToLower(string& s)
+    {
+        for(char& c : s) c=tolower(c);
+    }
+
     bool userExists(string email)
     {
+        ToLower(email);
         return AllUsers.find(email)!=AllUsers.end();
     }
 
     bool isValidEmail(string& email)
     {
+        ToLower(email);
         regex emailPattern(R"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})");
         return regex_match(email, emailPattern);
     }
@@ -331,10 +337,22 @@ public:
         else
         {
             User newUser;
+            ToLower(email);
             newUser.email=email;
             AllUsers[email]=vector<int>{};
             cout<<"New user "<<email<<" has been added to user list\n";
         }
+    }
+
+    void deleteUser(string& email)
+    {
+        auto it=AllUsers.find(email);
+        if (it!=AllUsers.end())
+        {
+            AllUsers.erase(it);
+            cout<<"User with email '"<<email<<"' has been deleted successfully.\n";
+        }
+        else cout<<"User with email '"<<email<<"' is not found.\n";
     }
 
     void addFavoriteMovie(string email, int movieId)
@@ -389,8 +407,14 @@ class Session
     UserList ul;
     string currentUserEmail;
 
+    void ToLower(string& s)
+    {
+        for(char& c : s) c=tolower(c);
+    }
+
     bool Login(string& email)
     {
+        ToLower(email);
         if (ul.userExists(email)) return currentUserEmail=email, cout<<"Logged in as "<<email<<"\n", true;
         else return cout<<"User not found: "<<email<<"\n", false;
     }
@@ -455,7 +479,7 @@ public:
                     {
                         system("cls");
                         cout<<"User: "<<currentUserEmail<<'\n';
-                        cout<<"\n0. Exit Profile\n1. Search Movies\n2. View Personal Details\n3. Search in Favorites\n4. Add to Favorites\n5. Remove from Favorites\n";
+                        cout<<"\n0. Exit Profile\n1. Search Movies\n2. View Personal Details\n3. Search in Favorites\n4. Add to Favorites\n5. Remove from Favorites\n6. Delete Profile\n";
                         cout<<"\nChoose an option: ";
                         string option; cin>>option, cin.ignore();
 
@@ -478,6 +502,20 @@ public:
                             int movieId;
                             cout<<"Enter movie index to remove: ", cin>>movieId, cin.ignore();
                             ul.removeFavoriteMovie(currentUserEmail, movieId);
+                        }
+                        else if(option=="6")
+                        {
+                            cout<<"Are you sure you want to delete your profile? All your data will be lost.\n";
+                            cout<<"\t0. NO\n\t1. YES\n";
+                            string choice; cin>>choice, cin.ignore();
+                            if(choice=="0") {}
+                            else if(choice=="1")
+                            {
+                                ul.deleteUser(currentUserEmail);
+                                currentUserEmail="";
+                                break;
+                            }
+                            else cout<<"Invalid choice.\n";
                         }
                         else cout<<"Invalid option! Try again.\n";
 
