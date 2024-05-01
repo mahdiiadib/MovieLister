@@ -1,10 +1,20 @@
 [
     {
+        "email": "a@mail.com",
+        "favorites": [
+            4,
+            8,
+            9,
+            6,
+            7
+        ]
+    },
+    {
         "email": "adib@yahoo.com",
         "favorites": [
+            20,
             15,
-            16,
-            20
+            16
         ]
     },
     {

@@ -75,6 +75,7 @@
         "slist": "cpp",
         "filesystem": "cpp",
         "climits": "cpp",
-        "cfloat": "cpp"
+        "cfloat": "cpp",
+        "any": "cpp"
     }
 }

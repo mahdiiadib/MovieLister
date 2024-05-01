@@ -91,6 +91,8 @@
 
 #include <intrin.h>
 
+#include<conio.h>
+
 
 
 /// Debugger
