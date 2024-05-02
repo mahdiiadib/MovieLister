@@ -116,17 +116,9 @@ public:
         return AllUsers.find(email)!=AllUsers.end();
     }
 
-    bool isValidEmail(string& email)
-    {
-        // Validate email using regular expression pattern
-        Helper::ToLower(email);
-        regex emailPattern(R"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})");
-        return regex_match(email, emailPattern);
-    }
-
     void addUser(string email)
     {
-        if(!isValidEmail(email)) cout<<email<<" is an invalid email address.\n"; // Check if email is valid
+        if(!Helper::isValidEmail(email)) cout<<email<<" is an invalid email address.\n"; // Check if email is valid
         else if(userExists(email)) cout<<"User "<<email<<" already exists\n"; // Check if user already exists
         else // Create and add new user to the user list
         {

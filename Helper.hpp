@@ -30,6 +30,14 @@ namespace Helper
         for(char& c : s) c=tolower(c); // Convert each character in the string to lowercase
     }
 
+    bool isValidEmail(string& email)
+    {
+        // Validate email using regular expression pattern
+        Helper::ToLower(email);
+        regex emailPattern(R"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})");
+        return regex_match(email, emailPattern);
+    }
+
     void Pause() // Pause execution
     {
         #if defined(_WIN32) || defined(_WIN64)
